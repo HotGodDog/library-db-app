@@ -1,0 +1,6 @@
+# Production dependencies
+flask>=3.0
+
+# library-db-core from TestPyPI
+--index-url https://test.pypi.org/simple/
+library-db-core>=0.1.0
