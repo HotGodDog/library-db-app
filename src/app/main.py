@@ -5,6 +5,7 @@ from flask import Flask
 from library_db_core import Database
 
 from .routes import init_routes
+from .data import init_sample_data
 
 
 def create_app() -> Flask:
@@ -13,6 +14,7 @@ def create_app() -> Flask:
     app.config["SECRET_KEY"] = "dev-secret-key-change-in-production"
     
     init_database()
+    init_sample_data()
     
     init_routes(app)
     
