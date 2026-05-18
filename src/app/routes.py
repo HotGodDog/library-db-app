@@ -15,3 +15,13 @@ def init_routes(app):
         stats = db.get_statistics()
         db.close()
         return render_template("index.html", stats=stats)
+        
+    @app.route("/books")
+    def books():
+        """List all books."""
+        db = Database().connect()
+        books_list = db.get_all_books()
+        db.close()
+        return render_template("books.html", books=books_list)
+
+    
