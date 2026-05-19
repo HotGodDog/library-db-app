@@ -33,6 +33,7 @@
                     <th>Дата выдачи</th>
                     <th>Срок</th>
                     <th>Статус</th>
+                    <th>Действие</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,11 +46,13 @@
                     <td>{{ loan.due_date }}</td>
                     <td>
                         {% if loan.status == 'active' %}
-                        <span class="badge bg-primary">На руках</span>
+                        <form action="/loans/return/{{ loan.loan_id }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success">Вернуть</button>
+                        </form>
                         {% elif loan.status == 'returned' %}
-                        <span class="badge bg-success">Возвращена</span>
+                        <span class="text-muted">Возвращена</span>
                         {% else %}
-                        <span class="badge bg-danger">Просрочена</span>
+                        <span class="text-danger">Просрочена</span>
                         {% endif %}
                     </td>
                 </tr>

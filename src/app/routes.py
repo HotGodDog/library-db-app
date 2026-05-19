@@ -119,3 +119,11 @@ def init_routes(app):
         db.close()
         
         return render_template("issue_book.html", books=books, readers=readers, employees=employees)
+    
+    @app.route("/loans/return/<int:loan_id>", methods=["POST"])
+    def return_book(loan_id):
+        """Return book by loan ID."""
+        db = Database().connect()
+        db.return_book(loan_id)
+        db.close()
+        return redirect(url_for("loans"))
