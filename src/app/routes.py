@@ -127,3 +127,11 @@ def init_routes(app):
         db.return_book(loan_id)
         db.close()
         return redirect(url_for("loans"))
+    
+    @app.route("/loans/overdue")
+    def overdue_loans():
+        """List overdue loans."""
+        db = Database().connect()
+        overdue = db.get_overdue_loans()
+        db.close()
+        return render_template("overdue.html", loans=overdue)
