@@ -2,7 +2,7 @@
 
 from flask import render_template, request, redirect, url_for
 
-from library_db_core import Database, Book, Reader
+from library_db_core import Database, Book, Reader, Loan
 
 
 def init_routes(app):
@@ -79,3 +79,43 @@ def init_routes(app):
             return redirect(url_for("readers"))
         
         return render_template("add_reader.html")
+    
+    @app.route("/loans")
+    def loans():
+        """List all loans."""
+        db = Database().connect()
+        loans_list = db.get_all_loans()
+        db.close()
+        return render_template("loans.html", loans=loans_list)
+    
+    @app.route("/loans/issue", methods=["GET", "POST"])
+    def issue_book():
+        """Issue book form."""
+        db = Database().connect()
+        
+        if request.method == "POST":
+            loan = Loan(
+                book_id=int(request.form["book_id"]),
+                reader_id=int(request.form["reader_id"]),
+                employee_id=int(request.form["employee_id"]),
+                due_date=request.form["due_date"]
+            )
+            db.issue_book(loan)
+            db.close()
+            return redirect(url_for("loans"))
+        
+        # GET — show form with available books
+        books = db._fetchall("""
+            SELECT book_id, title, available FROM books WHERE available > 0 ORDER BY title
+        """)
+        readers = db._fetchall("SELECT reader_id, last_name, first_name FROM readers WHERE is_active = 1 ORDER BY last_name")
+        employees = db._fetchall("""
+            SELECT e.employee_id, e.last_name, e.first_name, p.name as position
+            FROM employees e
+            JOIN positions p ON e.position_id = p.position_id
+            WHERE e.is_active = 1
+            ORDER BY e.last_name
+        """)
+        db.close()
+        
+        return render_template("issue_book.html", books=books, readers=readers, employees=employees)
