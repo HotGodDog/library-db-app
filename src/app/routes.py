@@ -135,3 +135,15 @@ def init_routes(app):
         overdue = db.get_overdue_loans()
         db.close()
         return render_template("overdue.html", loans=overdue)
+    
+    @app.route("/books/search")
+    def search_books():
+        """Search books."""
+        query = request.args.get("q", "")
+        db = Database().connect()
+        if query:
+            results = db.search_books(query)
+        else:
+            results = []
+        db.close()
+        return render_template("search.html", books=results, query=query)
