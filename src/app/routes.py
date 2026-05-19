@@ -2,7 +2,7 @@
 
 from flask import render_template, request, redirect, url_for
 
-from library_db_core import Database, Book
+from library_db_core import Database, Book, Reader
 
 
 def init_routes(app):
@@ -51,3 +51,31 @@ def init_routes(app):
         db.close()
         
         return render_template("add_book.html", authors=authors, categories=categories, publishers=publishers)
+
+    @app.route("/readers")
+    def readers():
+        """List all readers."""
+        db = Database().connect()
+        readers_list = db.get_all_readers()
+        db.close()
+        return render_template("readers.html", readers=readers_list)
+    
+    @app.route("/readers/add", methods=["GET", "POST"])
+    def add_reader():
+        """Add new reader form."""
+        if request.method == "POST":
+            db = Database().connect()
+            reader = Reader(
+                last_name=request.form["last_name"],
+                first_name=request.form["first_name"],
+                middle_name=request.form["middle_name"],
+                passport_num=request.form["passport_num"],
+                phone=request.form["phone"],
+                email=request.form["email"],
+                address=request.form["address"]
+            )
+            db.add_reader(reader)
+            db.close()
+            return redirect(url_for("readers"))
+        
+        return render_template("add_reader.html")
