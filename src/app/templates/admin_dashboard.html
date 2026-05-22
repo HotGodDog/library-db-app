@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Панель администратора — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_admin.html" %}{% endblock %}
+{% block content %}
+<h1>Панель администратора</h1>
+<p>Добро пожаловать, {{ user_name }}!</p>
+
+<div class="dashboard-menu">
+    <a href="{{ url_for('admin_employees') }}" class="dashboard-card">
+        <h3>Библиотекари</h3>
+        <p>Регистрация сотрудников</p>
+    </a>
+    <a href="{{ url_for('admin_settings') }}" class="dashboard-card">
+        <h3>Настройки</h3>
+        <p>Срок выдачи и параметры системы</p>
+    </a>
+</div>
+{% endblock %}

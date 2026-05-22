@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Библиотекари — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_admin.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>Библиотекари</h1>
+    <div class="page-header-actions">
+        <a href="{{ url_for('admin_add_employee') }}" class="btn btn-primary">Добавить библиотекаря</a>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">← Панель</a>
+    </div>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>ФИО</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Должность</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for emp in employees %}
+        <tr>
+            <td>{{ emp.employee_id }}</td>
+            <td>{{ emp.full_name }}</td>
+            <td>{{ emp.email }}</td>
+            <td>{{ emp.phone }}</td>
+            <td>{{ emp.position_name }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">Библиотекари не зарегистрированы</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

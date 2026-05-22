@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Настройки — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_admin.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>Настройки системы</h1>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">← Панель</a>
+</div>
+
+{% if success %}
+<div class="alert alert-success">{{ success }}</div>
+{% endif %}
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<form method="POST" class="form-card">
+    <div class="form-group">
+        <label>Срок выдачи (дней)</label>
+        <input type="number" name="loan_period_days" class="form-control"
+               value="{{ loan_period_days }}" min="1" max="365" required>
+        <p class="field-hint">Дата возврата при выдаче = дата выдачи + этот срок</p>
+    </div>
+    <div class="form-group">
+        <label>Срок продления (дней)</label>
+        <input type="number" name="extension_days" class="form-control"
+               value="{{ extension_days }}" min="1" max="90" required>
+        <p class="field-hint">На сколько дней продлевается выдача по запросу читателя</p>
+    </div>
+    <div class="form-group">
+        <label>Максимум продлений</label>
+        <input type="number" name="max_extensions" class="form-control"
+               value="{{ max_extensions }}" min="0" max="10" required>
+        <p class="field-hint">Сколько раз читатель может продлить одну выдачу</p>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+{% endblock %}
