@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Книги — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_librarian.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>Книжный фонд</h1>
+    <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">← Панель</a>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Жанр</th>
+            <th>Год</th>
+            <th>Доступно</th>
+            <th>В каталоге</th>
+            <th>Экземпляры</th>
+            <th>Видимость</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.book_id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author_name or '-' }}</td>
+            <td>{{ book.category_name or '-' }}</td>
+            <td>{{ book.year_published or '-' }}</td>
+            <td>{{ book.available }} / {{ book.total_copies }}</td>
+            <td>
+                {% if book.is_visible %}
+                <span class="badge badge-success">Видна</span>
+                {% else %}
+                <span class="badge badge-secondary">Скрыта</span>
+                {% endif %}
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('librarian_book_copies', book_id=book.book_id) }}" class="table-inline-form">
+                    <input type="number" name="total_copies" class="form-control form-control-sm"
+                           value="{{ book.total_copies }}" min="{{ book.total_copies - book.available }}" required>
+                    <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                </form>
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('librarian_book_visibility', book_id=book.book_id) }}">
+                    <button type="submit" class="btn btn-sm {{ 'btn-secondary' if book.is_visible else 'btn-primary' }}">
+                        {{ 'Скрыть' if book.is_visible else 'Показать' }}
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9">Книг нет</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
