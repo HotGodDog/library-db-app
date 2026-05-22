@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Выдать книгу — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_librarian.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>Выдать книгу</h1>
+    <a href="{{ url_for('librarian_loans') }}" class="btn btn-secondary">← Выдачи</a>
+</div>
+
+{% if not books %}
+<div class="alert alert-info">Нет доступных книг для выдачи.</div>
+{% elif not readers %}
+<div class="alert alert-info">Нет читателей, которым можно выдать книгу (все в чёрном списке или удалены).</div>
+{% else %}
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+<form method="POST" class="form-card">
+    <div class="form-group">
+        <label>Книга</label>
+        <select name="book_id" class="form-control" required>
+            {% for book in books %}
+            <option value="{{ book.book_id }}">{{ book.title }} (доступно: {{ book.available }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Читатель</label>
+        <select name="reader_id" class="form-control" required>
+            {% for reader in readers %}
+            <option value="{{ reader.reader_id }}">{{ reader.last_name }} {{ reader.first_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Дата выдачи</label>
+        <input type="date" class="form-control" value="{{ today }}" readonly>
+    </div>
+    <div class="form-group">
+        <label>Дата возврата</label>
+        <input type="date" class="form-control" value="{{ default_due }}" readonly>
+        <p class="field-hint">Рассчитано автоматически: сегодня + {{ loan_period_days }} дн. (настройки администратора)</p>
+    </div>
+    <button type="submit" class="btn btn-primary">Выдать</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Просроченные — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_librarian.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>Просроченные выдачи</h1>
+    <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">← Панель</a>
+</div>
+
+{% if loans %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Книга</th>
+            <th>Читатель</th>
+            <th>Телефон</th>
+            <th>Срок возврата</th>
+            <th>Дней просрочки</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in loans %}
+        <tr class="row-danger">
+            <td>{{ loan.loan_id }}</td>
+            <td>{{ loan.book_title }}</td>
+            <td>{{ loan.reader_name }}</td>
+            <td>{{ loan.reader_phone }}</td>
+            <td>{{ loan.due_date }}</td>
+            <td>{{ loan.days_overdue }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-success">Нет просроченных выдач.</div>
+{% endif %}
+{% endblock %}

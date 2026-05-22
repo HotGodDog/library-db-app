@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Выдачи — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_librarian.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>Выдачи книг</h1>
+    <div class="page-header-actions">
+        <a href="{{ url_for('librarian_issue') }}" class="btn btn-primary">Выдать книгу</a>
+        <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">← Панель</a>
+    </div>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Книга</th>
+            <th>Читатель</th>
+            <th>Выдана</th>
+            <th>Срок</th>
+            <th>Статус</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in loans %}
+        <tr>
+            <td>{{ loan.loan_id }}</td>
+            <td>{{ loan.book_title }}</td>
+            <td>{{ loan.reader_name }}</td>
+            <td>{{ loan.loan_date }}</td>
+            <td>{{ loan.due_date }}</td>
+            <td>
+                {% if loan.return_date %}
+                <span class="badge badge-secondary">Возвращена</span>
+                {% elif loan.is_overdue %}
+                <span class="badge badge-danger">Просрочена</span>
+                {% else %}
+                <span class="badge badge-success">На руках</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if not loan.return_date %}
+                <form action="{{ url_for('librarian_return', loan_id=loan.loan_id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-primary btn-sm" data-confirm="Принять возврат книги?">Вернуть</button>
+                </form>
+                {% else %}
+                —
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7">Выдач нет</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
