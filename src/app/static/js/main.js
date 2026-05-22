@@ -29,5 +29,20 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.focus();
     }
     
+    // Auth tabs on login page
+    const authTabs = document.querySelectorAll('.auth-tab');
+    const panelLogin = document.getElementById('panel-login');
+    const panelRegister = document.getElementById('panel-register');
+    if (authTabs.length && panelLogin && panelRegister) {
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const isRegister = tab.dataset.mode === 'register';
+                authTabs.forEach(t => t.classList.toggle('active', t === tab));
+                panelLogin.classList.toggle('hidden', isRegister);
+                panelRegister.classList.toggle('hidden', !isRegister);
+            });
+        });
+    }
+
     console.log('Library App initialized');
 });
