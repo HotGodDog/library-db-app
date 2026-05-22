@@ -1,0 +1,10 @@
+<nav class="navbar">
+    <div class="container">
+        <a class="navbar-brand" href="/">АСУБ — Библиотека</a>
+        <div class="nav-links">
+            <a href="/" class="{{ 'active' if active == 'catalog' else '' }}">Каталог</a>
+            <a href="{{ url_for('reader_dashboard') }}" class="{{ 'active' if active == 'dashboard' else '' }}">Кабинет</a>
+            <a href="{{ url_for('logout') }}">Выход ({{ user_name }})</a>
+        </div>
+    </div>
+</nav>
