@@ -1,62 +1,76 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход — АСУБ</title>
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="/">АСУБ — Библиотека</a>
-            <div class="nav-links">
-                <a href="/">Каталог</a>
-                <a href="/login" class="active">Вход</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="login-container">
-            <h2>Вход в систему</h2>
-            
-            {% if error %}
-            <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
-            
-            <form method="POST">
-                <div class="form-group">
-                    <label>Тип пользователя</label>
-                    <select name="user_type" class="form-control">
-                        <option value="employee">Сотрудник</option>
-                        <option value="reader">Читатель</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Пароль</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width:100%">Войти</button>
-            </form>
-            
-            <p style="text-align:center; margin-top:15px;">
-                <a href="/register">Регистрация читателя</a>
-            </p>
-        </div>
+{% extends "base.html" %}
+{% block title %}Вход — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'login' %}{% include "_nav_public.html" %}{% endblock %}
+{% block content %}
+<div class="login-container login-container-wide">
+    <div class="auth-tabs">
+        <button type="button" class="auth-tab {{ 'active' if mode != 'register' else '' }}" data-mode="login">Вход</button>
+        <button type="button" class="auth-tab {{ 'active' if mode == 'register' else '' }}" data-mode="register">Регистрация</button>
     </div>
 
-    <footer class="footer">
-        <p>АСУБ — Автоматизированная система управления библиотекой</p>
-    </footer>
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+    <div id="panel-login" class="auth-panel {{ '' if mode != 'register' else 'hidden' }}">
+        <h2>Вход в систему</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            <input type="hidden" name="action" value="login">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required value="{{ email or '' }}">
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Войти</button>
+        </form>
+    </div>
+
+    <div id="panel-register" class="auth-panel {{ 'hidden' if mode != 'register' else '' }}">
+        <h2>Регистрация читателя</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            <input type="hidden" name="action" value="register">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Фамилия</label>
+                    <input type="text" name="last_name" class="form-control" required value="{{ form.last_name if form else '' }}">
+                </div>
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" name="first_name" class="form-control" required value="{{ form.first_name if form else '' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Отчество</label>
+                <input type="text" name="middle_name" class="form-control" value="{{ form.middle_name if form else '' }}">
+            </div>
+            <div class="form-group">
+                <label>Телефон</label>
+                <input type="text" name="phone" class="form-control" required value="{{ form.phone if form else '' }}">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required value="{{ form.email if form else '' }}">
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" name="password" class="form-control" required minlength="4">
+            </div>
+            <div class="form-group">
+                <label>Паспорт</label>
+                <input type="text" name="passport_num" class="form-control" required value="{{ form.passport_num if form else '' }}">
+            </div>
+            <div class="form-group">
+                <label>Адрес</label>
+                <input type="text" name="address" class="form-control" required value="{{ form.address if form else '' }}">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
