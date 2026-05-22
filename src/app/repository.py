@@ -1,8 +1,8 @@
-"""Data access layer — centralized SQL for the library app."""
+"""Data access layer — centralized SQL for the library app"""
 
 from datetime import datetime, timedelta
 
-from library_db_core import Database, Employee, Loan, Reader
+from library_db_core import Database, Loan, Reader
 
 ADMIN_POSITION = "Заведующий"
 LIBRARIAN_POSITION = "Библиотекарь"
@@ -46,7 +46,7 @@ class LibraryRepository:
     def __init__(self, db: Database):
         self.db = db
 
-    # --- Settings ---
+    # Settings
 
     def get_setting(self, key: str, default: str = "") -> str:
         row = self.db._fetchone(
@@ -72,7 +72,7 @@ class LibraryRepository:
         days = self.get_loan_settings()["loan_period_days"]
         return (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d")
 
-    # --- Auth / employees ---
+    # Auth / employees
 
     def employee_role(self, employee_id: int) -> str:
         row = self.db._fetchone(
@@ -111,7 +111,7 @@ class LibraryRepository:
             for r in rows
         ]
 
-    # --- Readers ---
+    # Readers
 
     def get_reader_profile(self, reader_id: int) -> dict | None:
         row = self.db._fetchone(
@@ -201,7 +201,7 @@ class LibraryRepository:
     def add_reader(self, reader: Reader) -> None:
         self.db.add_reader(reader)
 
-    # --- Books ---
+    # Books
 
     def book_is_visible(self, book_id: int) -> bool:
         row = self.db._fetchone(
@@ -278,7 +278,7 @@ class LibraryRepository:
                 (new_val, book_id),
             )
 
-    # --- Loans ---
+    # Loans
 
     def issue_book(self, loan: Loan) -> None:
         self.db.issue_book(loan)
@@ -383,7 +383,7 @@ class LibraryRepository:
             result.append(row)
         return result
 
-    # --- Reports ---
+    # Reports
 
     def report_loans_returns(self) -> list[dict]:
         return [dict(r) for r in self.db._fetchall(SQL_LOANS_RETURNS_REPORT)]
