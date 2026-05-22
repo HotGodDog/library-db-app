@@ -1,24 +1,109 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Личный кабинет — АСУБ</title>
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="/">АСУБ — Библиотека</a>
-            <div class="nav-links">
-                <a href="/">Каталог</a>
-                <a href="/reader/dashboard" class="active">Кабинет</a>
-                <a href="/logout">Выход ({{ user_name }})</a>
-            </div>
+{% extends "base.html" %}
+{% block title %}Личный кабинет — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_reader.html" %}{% endblock %}
+{% block content %}
+<h1>Личный кабинет читателя</h1>
+<p>Добро пожаловать, {{ user_name }}!</p>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+{% if success %}
+<div class="alert alert-success">{{ success }}</div>
+{% endif %}
+
+<div class="profile-card">
+    <h3>Профиль</h3>
+    <div class="profile-grid">
+        <div><strong>Email:</strong> {{ reader.email }}</div>
+        <div><strong>Телефон:</strong> {{ reader.phone }}</div>
+        <div><strong>Паспорт:</strong> {{ reader.passport_num }}</div>
+        <div><strong>Адрес:</strong> {{ reader.address }}</div>
+        <div><strong>Дата регистрации:</strong> {{ reader.reg_date or '—' }}</div>
+        <div>
+            <strong>Статус аккаунта:</strong>
+            {% if not reader.is_active %}
+            <span class="badge badge-secondary">Удалён</span>
+            {% elif reader.is_blacklisted %}
+            <span class="badge badge-danger">Чёрный список</span>
+            <span class="field-hint">Выдача книг недоступна. Обратитесь в библиотеку.</span>
+            {% else %}
+            <span class="badge badge-success">Активен</span>
+            {% endif %}
         </div>
-    </nav>
-    <div class="container">
-        <h1>Личный кабинет читателя</h1>
-        <p>Добро пожаловать, {{ user_name }}!</p>
     </div>
-</body>
-</html>
+</div>
+
+{% if reader.is_blacklisted %}
+<div class="alert alert-danger">
+    Ваш аккаунт в чёрном списке. Получение и продление книг недоступны до снятия ограничения библиотекарем.
+</div>
+{% endif %}
+
+<h2 class="section-title">Мои книги на руках</h2>
+{% if active_loans %}
+<table>
+    <thead>
+        <tr>
+            <th>Книга</th>
+            <th>Дата выдачи</th>
+            <th>Вернуть до</th>
+            <th>Продления</th>
+            <th>Статус</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in active_loans %}
+        <tr>
+            <td>{{ loan.book_title }}</td>
+            <td>{{ loan.loan_date }}</td>
+            <td>{{ loan.due_date }}</td>
+            <td>{{ loan.extension_count }} / {{ loan.max_extensions }}</td>
+            <td>
+                {% if loan.is_overdue %}
+                <span class="badge badge-danger">Просрочено</span>
+                {% else %}
+                <span class="badge badge-success">На руках</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if loan.can_extend and not reader.is_blacklisted %}
+                <form method="POST" action="{{ url_for('reader_extend_loan', loan_id=loan.loan_id) }}" style="display:inline;"
+                      data-confirm="Продлить выдачу на {{ extension_days }} дн.?">
+                    <button type="submit" class="btn btn-sm btn-primary">Продлить</button>
+                </form>
+                {% else %}
+                —
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">У вас нет активных выдач. Посмотрите <a href="/">каталог</a> и обратитесь к библиотекарю.</div>
+{% endif %}
+
+{% if history_loans %}
+<h2 class="section-title">История выдач</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Книга</th>
+            <th>Выдана</th>
+            <th>Возвращена</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in history_loans %}
+        <tr>
+            <td>{{ loan.book_title }}</td>
+            <td>{{ loan.loan_date }}</td>
+            <td>{{ loan.return_date or '—' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}
