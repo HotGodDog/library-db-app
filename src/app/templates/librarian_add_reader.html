@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Добавить читателя — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_librarian.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>Добавить читателя</h1>
+    <a href="{{ url_for('librarian_readers') }}" class="btn btn-secondary">← Читатели</a>
+</div>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<form method="POST" class="form-card">
+    <div class="form-row">
+        <div class="form-group">
+            <label>Фамилия</label>
+            <input type="text" name="last_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Имя</label>
+            <input type="text" name="first_name" class="form-control" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Отчество</label>
+        <input type="text" name="middle_name" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Паспорт</label>
+        <input type="text" name="passport_num" class="form-control" required>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Телефон</label>
+            <input type="text" name="phone" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Пароль (для входа)</label>
+        <input type="password" name="password" class="form-control" required minlength="4">
+    </div>
+    <div class="form-group">
+        <label>Адрес</label>
+        <input type="text" name="address" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+{% endblock %}
