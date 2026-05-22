@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_librarian.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>{{ title }}</h1>
+    <div class="page-header-actions">
+        {% include "_report_export.html" %}
+        <a href="{{ url_for('librarian_stats') }}" class="btn btn-secondary">← Статистика</a>
+    </div>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Книга</th>
+            <th>Читатель</th>
+            <th>Выдана</th>
+            <th>Срок</th>
+            <th>Возвращена</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in report %}
+        <tr>
+            <td>{{ row.loan_id }}</td>
+            <td>{{ row.book_title }}</td>
+            <td>{{ row.reader_name }}</td>
+            <td>{{ row.loan_date }}</td>
+            <td>{{ row.due_date }}</td>
+            <td>{{ row.return_date or '—' }}</td>
+            <td>{{ row.status }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7">Записей нет</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

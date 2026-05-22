@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_librarian.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>{{ title }}</h1>
+    <div class="page-header-actions">
+        {% include "_report_export.html" %}
+        <a href="{{ url_for('librarian_stats') }}" class="btn btn-secondary">← Статистика</a>
+    </div>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Книга</th>
+            <th>Читатель</th>
+            <th>Телефон</th>
+            <th>Выдана</th>
+            <th>Вернуть до</th>
+            <th>Продления</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in report %}
+        <tr class="{{ 'row-danger' if row.is_overdue else '' }}">
+            <td>{{ row.loan_id }}</td>
+            <td>{{ row.book_title }}</td>
+            <td>{{ row.reader_name }}</td>
+            <td>{{ row.reader_phone }}</td>
+            <td>{{ row.loan_date }}</td>
+            <td>{{ row.due_date }}</td>
+            <td>{{ row.extension_count }}</td>
+            <td>
+                {% if row.is_overdue %}
+                <span class="badge badge-danger">Просрочено</span>
+                {% else %}
+                <span class="badge badge-success">На руках</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8">Активных выдач нет</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

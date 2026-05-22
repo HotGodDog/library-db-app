@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Статистика — АСУБ{% endblock %}
+{% block navbar %}{% set active = 'dashboard' %}{% include "_nav_librarian.html" %}{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <h1>Статистика и отчёты</h1>
+    <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">← Панель</a>
+</div>
+
+<h2 class="section-title">Отчёты</h2>
+<div class="dashboard-menu">
+    <a href="{{ url_for('librarian_report_loans_returns') }}" class="dashboard-card">
+        <h3>Выдачи и возвраты</h3>
+        <p>Полный журнал всех операций</p>
+    </a>
+    <a href="{{ url_for('librarian_report_active') }}" class="dashboard-card">
+        <h3>Активные выдачи</h3>
+        <p>Книги на руках у читателей</p>
+    </a>
+</div>
+
+<h2 class="section-title">Показатели</h2>
+<div class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-value">{{ stats.total_books }}</span>
+        <span class="stat-label">Названий книг</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">{{ stats.total_copies }}</span>
+        <span class="stat-label">Экземпляров всего</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">{{ stats.available_copies }}</span>
+        <span class="stat-label">Доступно сейчас</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">{{ stats.total_readers }}</span>
+        <span class="stat-label">Читателей</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">{{ stats.active_loans }}</span>
+        <span class="stat-label">Активных выдач</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">{{ stats.total_loans }}</span>
+        <span class="stat-label">Выдач всего</span>
+    </div>
+</div>
+{% endblock %}
