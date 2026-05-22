@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — АСУБ</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/">АСУБ — Библиотека</a>
+            <div class="nav-links">
+                <a href="/">Каталог</a>
+                <a href="/login" class="active">Вход</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="login-container">
+            <h2>Вход в систему</h2>
+            
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label>Тип пользователя</label>
+                    <select name="user_type" class="form-control">
+                        <option value="employee">Сотрудник</option>
+                        <option value="reader">Читатель</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width:100%">Войти</button>
+            </form>
+            
+            <p style="text-align:center; margin-top:15px;">
+                <a href="/register">Регистрация читателя</a>
+            </p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>АСУБ — Автоматизированная система управления библиотекой</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

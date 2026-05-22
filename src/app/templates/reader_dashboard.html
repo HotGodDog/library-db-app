@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет — АСУБ</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/">АСУБ — Библиотека</a>
+            <div class="nav-links">
+                <a href="/">Каталог</a>
+                <a href="/reader/dashboard" class="active">Кабинет</a>
+                <a href="/logout">Выход ({{ user_name }})</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Личный кабинет читателя</h1>
+        <p>Добро пожаловать, {{ user_name }}!</p>
+    </div>
+</body>
+</html>
