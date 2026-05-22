@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // Confirm actions (delete, return, etc.)
-    const confirmButtons = document.querySelectorAll('[data-confirm]');
+    const confirmButtons = document.querySelectorAll('button[data-confirm], [data-confirm]');
     confirmButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             const message = this.getAttribute('data-confirm');
