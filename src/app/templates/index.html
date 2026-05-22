@@ -1,76 +1,58 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог — АСУБ</title>
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="/">АСУБ — Библиотека</a>
-            <div class="nav-links">
-                <a href="/" class="active">Каталог</a>
-                <a href="/login">Вход</a>
-            </div>
-        </div>
-    </nav>
+{% extends "base.html" %}
+{% block title %}Каталог — АСУБ{% endblock %}
+{% block navbar %}
+{% set active = 'catalog' %}
+{% if employee_role == 'admin' %}
+{% include "_nav_admin.html" %}
+{% elif user_type == 'employee' %}
+{% include "_nav_librarian.html" %}
+{% elif user_type == 'reader' %}
+{% include "_nav_reader.html" %}
+{% else %}
+{% include "_nav_public.html" %}
+{% endif %}
+{% endblock %}
+{% block content %}
+<h1>Каталог книг</h1>
+{% if user_type %}
+<p class="page-subtitle">Просматривайте фонд библиотеки. Вы вошли как {{ user_name }}.</p>
+{% else %}
+<p class="page-subtitle">Просматривайте фонд библиотеки. Для выдачи книг войдите в личный кабинет.</p>
+{% endif %}
 
-    <div class="container">
-        <h1>Каталог книг</h1>
-        
-        <!-- Поиск -->
-        <form action="/" method="GET" class="search-box">
-            <input type="text" name="q" placeholder="Поиск по названию или автору..." value="{{ query or '' }}">
-            <button type="submit" class="btn btn-primary">Найти</button>
-            {% if query %}
-            <a href="/" class="btn btn-secondary">Сбросить</a>
-            {% endif %}
-        </form>
-        
-        <!-- Книги -->
-        <div class="book-grid">
-            {% for book in books %}
-            <div class="book-card">
-                <h3>{{ book.title }}</h3>
-                <div class="book-info">
-                    <strong>Автор:</strong> {{ book.author_name or '-' }}
-                </div>
-                <div class="book-info">
-                    <strong>Жанр:</strong> {{ book.category_name or '-' }}
-                </div>
-                <div class="book-info">
-                    <strong>Год:</strong> {{ book.year_published or '-' }}
-                </div>
-                <div class="book-info">
-                    <strong>Страниц:</strong> {{ book.pages or '-' }}
-                </div>
-                <div class="book-info">
-                    <strong>Доступно:</strong>
-                    {% if book.available > 0 %}
-                    <span class="badge badge-success">{{ book.available }} / {{ book.total_copies }}</span>
-                    {% else %}
-                    <span class="badge badge-danger">Нет в наличии</span>
-                    {% endif %}
-                </div>
-            </div>
+<form action="/" method="GET" class="search-box">
+    <input type="text" name="q" placeholder="Поиск по названию или автору..." value="{{ query or '' }}">
+    <button type="submit" class="btn btn-primary">Найти</button>
+    {% if query %}
+    <a href="/" class="btn btn-secondary">Сбросить</a>
+    {% endif %}
+</form>
+
+<div class="book-grid">
+    {% for book in books %}
+    <div class="book-card">
+        <h3>{{ book.title }}</h3>
+        <div class="book-info"><strong>Автор:</strong> {{ book.author_name or '-' }}</div>
+        <div class="book-info"><strong>Жанр:</strong> {{ book.category_name or '-' }}</div>
+        <div class="book-info"><strong>Год:</strong> {{ book.year_published or '-' }}</div>
+        <div class="book-info"><strong>Страниц:</strong> {{ book.pages or '-' }}</div>
+        <div class="book-info">
+            <strong>Доступно:</strong>
+            {% if book.available > 0 %}
+            <span class="badge badge-success">{{ book.available }} / {{ book.total_copies }}</span>
             {% else %}
-            <div class="alert alert-info">
-                {% if query %}
-                По запросу "{{ query }}" ничего не найдено.
-                {% else %}
-                Каталог пуст.
-                {% endif %}
-            </div>
-            {% endfor %}
+            <span class="badge badge-danger">Нет в наличии</span>
+            {% endif %}
         </div>
     </div>
-
-    <footer class="footer">
-        <p>АСУБ — Автоматизированная система управления библиотекой</p>
-    </footer>
-
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+    {% else %}
+    <div class="alert alert-info">
+        {% if query %}
+        По запросу «{{ query }}» ничего не найдено.
+        {% else %}
+        Каталог пуст.
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
