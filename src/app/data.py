@@ -34,13 +34,13 @@ def init_sample_data():
         db.close()
         return
 
-    # ─── 1. Positions (2) ───
+    # 1. Positions (2) 
     db._execute("INSERT INTO positions (name, description) VALUES ('Заведующий', 'Руководитель библиотеки')")
     pos_admin = db.cursor.lastrowid
     db._execute("INSERT INTO positions (name, description) VALUES ('Библиотекарь', 'Выдача и приём книг')")
     pos_lib = db.cursor.lastrowid
 
-    # ─── 2. Categories (5) ───
+    # 2. Categories (5) 
     categories_data = [
         ("Роман", "Художественная проза"),
         ("Фантастика", "Научная фантастика"),
@@ -53,7 +53,7 @@ def init_sample_data():
         db._execute("INSERT INTO categories (name, description) VALUES (?, ?)", (name, desc))
         cat_ids[name] = db.cursor.lastrowid
 
-    # ─── 3. Publishers (3) ───
+    # 3. Publishers (3) 
     publishers_data = [
         ("АСТ", "Москва", "Россия"),
         ("Эксмо", "Москва", "Россия"),
@@ -64,7 +64,7 @@ def init_sample_data():
         db._execute("INSERT INTO publishers (name, city, country) VALUES (?, ?, ?)", (name, city, country))
         pub_ids[name] = db.cursor.lastrowid
 
-    # ─── 4. Authors (20) ───
+    # 4. Authors (20) 
     authors_data = [
         ("Толстой", "Лев", "Николаевич"),
         ("Достоевский", "Фёдор", "Михайлович"),
@@ -95,7 +95,7 @@ def init_sample_data():
         )
         auth_ids[f"{last}_{first}"] = db.cursor.lastrowid
 
-    # ─── 5. Employees: 1 admin + 3 librarians (4 total) ───
+    # 5. Employees: 1 admin + 3 librarians
     employees_data = [
         ("Администратор", "Системный", "", pos_admin, "89000000000", "admin@lib.ru", "admin"),
         ("Иванова", "Мария", "Петровна", pos_lib, "89001234567", "ivanova@lib.ru", "123456"),
@@ -110,7 +110,7 @@ def init_sample_data():
         ))
         emp_ids[email] = db.cursor.lastrowid
 
-    # ─── 6. Readers (5) ───
+    # 6. Readers (5) 
     readers_data = [
         ("Петров", "Иван", "Сергеевич", "1234 567890", "89001112233", "reader@lib.ru", "123456", "г. Москва, ул. Примерная, 1"),
         ("Смирнова", "Анна", "Викторовна", "2345 678901", "89002223344", "smirnova@lib.ru", "reader1", "г. Москва, ул. Центральная, 15"),
@@ -127,7 +127,7 @@ def init_sample_data():
         ))
         reader_ids[email] = db.cursor.lastrowid
 
-    # ─── 7. Books (30) ───
+    # 7. Books (30) 
     books_data = [
         ("Война и мир", "Толстой_Лев", "Роман", "АСТ", 3, 2020, 1360, 3, "Эпопея о войне 1812 года"),
         ("Мастер и Маргарита", "Булгаков_Михаил", "Роман", "АСТ", 2, 2021, 480, 2, "Философский роман"),
@@ -175,7 +175,7 @@ def init_sample_data():
         ))
         book_ids[title] = db.cursor.lastrowid
 
-    # ─── 8. Loans (10) ───
+    # 8. Loans (10) 
     # 5 returned, 3 active, 2 overdue
     loans_data = [
         # Returned loans (5)
