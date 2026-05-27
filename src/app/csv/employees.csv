@@ -1,0 +1,5 @@
+employee_id;last_name;first_name;middle_name;position_id;phone;email;password
+1;Администратор;Системный;;1;89000000000;admin@lib.ru;admin
+2;Иванова;Мария;Петровна;2;89001234567;ivanova@lib.ru;123456
+3;Петров;Сергей;Владимирович;2;89002345678;petrov@lib.ru;lib123
+4;Сидорова;Елена;Андреевна;2;89003456789;sidorova@lib.ru;lib456
