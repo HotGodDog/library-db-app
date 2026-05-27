@@ -32,3 +32,36 @@ def app():
 def client(app):
     """Test client for HTTP requests"""
     return app.test_client()
+
+
+@pytest.fixture
+def auth_client(client):
+    """Client authenticated as reader"""
+    client.post("/login", data={
+        "action": "login",
+        "email": "reader@lib.ru",
+        "password": "123456",
+    })
+    return client
+
+
+@pytest.fixture
+def librarian_client(client):
+    """Client authenticated as librarian"""
+    client.post("/login", data={
+        "action": "login",
+        "email": "ivanova@lib.ru",
+        "password": "123456",
+    })
+    return client
+
+
+@pytest.fixture
+def admin_client(client):
+    """Client authenticated as admin"""
+    client.post("/login", data={
+        "action": "login",
+        "email": "admin@lib.ru",
+        "password": "admin",
+    })
+    return client
