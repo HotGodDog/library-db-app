@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from library_db_core import Database, Loan, Reader
 
-ADMIN_POSITION = "Заведующий"
+ADMIN_POSITION = "Администратор"
 LIBRARIAN_POSITION = "Библиотекарь"
 
 SQL_LOANS_RETURNS_REPORT = """

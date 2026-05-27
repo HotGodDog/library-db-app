@@ -1,4 +1,4 @@
-"""CSV and PDF export for librarian reports."""
+"""CSV and PDF export for librarian reports"""
 
 import csv
 import io
