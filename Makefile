@@ -8,8 +8,15 @@ install:
 run:
 	flask --app src/app run --debug
 
-# === Тесты ===
-test:
+# Очистка кэша
+clean-cache:
+	@echo "clean-cache..."
+	@find . -type d -name .pytest_cache -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
+
+# Тесты
+test: clean-cache
 	PYTHONPATH=. pytest tests/ -v --tb=short
 
 # Сброс БД
