@@ -8,6 +8,10 @@ install:
 run:
 	flask --app src/app run --debug
 
+# === Тесты ===
+test:
+	PYTHONPATH=. pytest tests/ -v --tb=short
+
 # Сброс БД
 reset-db:
 	rm -f library.db
@@ -21,5 +25,6 @@ help:
 	@echo "Доступные команды:"
 	@echo "  make install        - Установка зависимостей"
 	@echo "  make run            - Запуск приложения"
+	@echo "  make test           - Запуск тестов"
 	@echo "  make reset-db       - Удаление файла базы данных"
 	@echo "  make reset          - Полный сброс проекта"
