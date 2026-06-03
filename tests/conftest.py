@@ -5,15 +5,25 @@ import tempfile
 
 import pytest
 
+
+# Setting the path to the DB before importing library-db-core
+@pytest.fixture(scope="session", autouse=True)
+def _set_test_db_path():
+    """Ensure LIBRARY_DB_PATH is set before any imports"""
+    db_fd, db_path = tempfile.mkstemp(suffix=".db")
+    os.environ["LIBRARY_DB_PATH"] = db_path
+    yield
+    os.close(db_fd)
+    os.unlink(db_path)
+
+
+# Import the main.py послafter installing the enviriment variable
 from src.app.main import create_app, init_database
 
 
 @pytest.fixture
 def app():
     """Create application for testing with temporary database"""
-    db_fd, db_path = tempfile.mkstemp(suffix=".db")
-    os.environ["LIBRARY_DB_PATH"] = db_path
-    
     app = create_app()
     app.config["TESTING"] = True
     app.config["SECRET_KEY"] = "test-secret-key"
@@ -22,10 +32,6 @@ def app():
         init_database()
     
     yield app
-    
-    os.close(db_fd)
-    os.unlink(db_path)
-    del os.environ["LIBRARY_DB_PATH"]
 
 
 @pytest.fixture
