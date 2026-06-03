@@ -32,3 +32,20 @@ class TestLoginPage:
         assert response.status_code == 200
         assert "Вход" in response.data.decode("utf-8")
         assert "Регистрация" in response.data.decode("utf-8")
+
+
+class TestPublicSearchEdgeCases:
+    """Test search edge cases"""
+
+    def test_search_empty_query(self, client):
+        """Empty search query shows all books"""
+        response = client.get("/?q=")
+        assert response.status_code == 200
+        assert "Каталог" in response.data.decode("utf-8")
+
+    def test_search_special_characters(self, client):
+        """Search handles special characters gracefully"""
+        response = client.get("/?q=<script>alert(1)</script>")
+        assert response.status_code == 200
+        # Should not crash, should show no results or escape
+        assert "ничего не найдено" in response.data.decode("utf-8") or "Каталог" in response.data.decode("utf-8")
