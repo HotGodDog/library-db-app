@@ -110,3 +110,19 @@ class TestReports:
         assert response.status_code == 200
         assert response.content_type == "application/pdf"
         assert response.data[:4] == b"%PDF"
+
+
+class TestLibrarianRoleProtection:
+    """Test that non-librarians cannot access librarian pages"""
+
+    def test_reader_cannot_access_librarian(self, auth_client):
+        """Reader is redirected from librarian pages"""
+        response = auth_client.get("/librarian/dashboard", follow_redirects=True)
+        assert response.status_code == 200
+        assert "Личный кабинет" in response.data.decode("utf-8") or "Вход" in response.data.decode("utf-8")
+
+    def test_unauthenticated_cannot_access_librarian(self, client):
+        """Anonymous user redirected to login from librarian pages"""
+        response = client.get("/librarian/dashboard", follow_redirects=True)
+        assert response.status_code == 200
+        assert "Вход" in response.data.decode("utf-8")
