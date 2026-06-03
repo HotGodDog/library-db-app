@@ -6,7 +6,7 @@ import tempfile
 import pytest
 
 
-# === CRITICAL: Set DB path BEFORE importing library_db_core ===
+# Set DB path BEFORE importing library_db_core
 # library_db_core.config reads DB_PATH at import time, not at runtime.
 # We must set the env var before any import from src.app or library_db_core.
 _db_fd, _db_path = tempfile.mkstemp(suffix=".db")

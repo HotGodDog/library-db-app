@@ -12,9 +12,9 @@ class TestPublicCatalog:
 
     def test_search_returns_results(self, client):
         """Search query returns matching books."""
-        response = client.get("/?q=Война")
+        response = client.get("/?q=Мастер")
         assert response.status_code == 200
-        assert "Война и мир" in response.data.decode("utf-8")
+        assert "Мастер и Маргарита" in response.data.decode("utf-8")
 
     def test_search_no_results(self, client):
         """Search for non-existent book shows empty message"""
