@@ -6,19 +6,26 @@ import tempfile
 import pytest
 
 
-# Setting the path to the DB before importing library-db-core
-@pytest.fixture(scope="session", autouse=True)
-def _set_test_db_path():
-    """Ensure LIBRARY_DB_PATH is set before any imports"""
-    db_fd, db_path = tempfile.mkstemp(suffix=".db")
-    os.environ["LIBRARY_DB_PATH"] = db_path
-    yield
-    os.close(db_fd)
-    os.unlink(db_path)
+# === CRITICAL: Set DB path BEFORE importing library_db_core ===
+# library_db_core.config reads DB_PATH at import time, not at runtime.
+# We must set the env var before any import from src.app or library_db_core.
+_db_fd, _db_path = tempfile.mkstemp(suffix=".db")
+os.environ["LIBRARY_DB_PATH"] = _db_path
 
-
-# Import the main.py послafter installing the enviriment variable
+# Now safe to import modules that read LIBRARY_DB_PATH at import time
 from src.app.main import create_app, init_database
+
+
+def _cleanup_test_db():
+    """Remove temporary test database after session"""
+    os.close(_db_fd)
+    os.unlink(_db_path)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _session_cleanup(request):
+    """Register cleanup to run after all tests"""
+    request.addfinalizer(_cleanup_test_db)
 
 
 @pytest.fixture
