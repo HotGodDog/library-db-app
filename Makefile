@@ -1,37 +1,90 @@
-.PHONY: install run test lint clean help
+.PHONY: install install-dev install-prod run test coverage lint clean clean-cache reset-db reset help docker-build docker-up docker-down
 
-# Установка
+# Python
+
+ifeq ($(OS),Windows_NT)
+    PYTHON := python
+    PIP := python -m pip
+else
+    PYTHON := python3
+    PIP := python3 -m pip
+endif
+
+# Install
+
+install-prod:
+	$(PIP) install -r requirements.txt
+
+install-dev:
+	$(PIP) install -e ".[dev]"
+
 install:
-	pip install -r requirements.txt
+	$(PIP) install -r requirements.lock
 
-# Запуск
+# Run
+
 run:
-	flask --app src/app run --debug
+	$(PYTHON) -m flask --app src/app run --debug
 
-# Очистка кэша
+# Test
+
+test: clean-cache
+	$(PYTHON) -m pytest tests/ -v --tb=short
+
+coverage: clean-cache
+	$(PYTHON) -m pytest tests/ --cov=src/app --cov-report=html --cov-report=term -v
+
+# Lint
+
+lint:
+	$(PYTHON) -m ruff check src/ tests/
+
+# Clean
+
 clean-cache:
-	@echo "clean-cache..."
+	@echo "Cleaning cache..."
 	@find . -type d -name .pytest_cache -exec rm -rf {} + 2>/dev/null || true
 	@find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	@rm -rf .coverage htmlcov/
 
-# Тесты
-test: clean-cache
-	PYTHONPATH=. pytest tests/ -v --tb=short
+clean: clean-cache
+	@rm -rf build/ dist/ *.egg-info/
 
-# Сброс БД
+# Database
+
 reset-db:
 	rm -f library.db
 
-# Полная перезагрузка
 reset: clean reset-db
-	@echo "Проект сброшен. Запустите 'make run' для создания новой БД."
+	@echo "Project reset. Run 'make run' to create new database."
 
-# Помощь
+# Docker
+
+docker-build:
+	docker build -t library-db-app:latest .
+
+docker-up:
+	docker compose -f infra/compose.yaml up --build -d
+
+docker-down:
+	docker compose -f infra/compose.yaml down -v
+
+# Help
+
 help:
-	@echo "Доступные команды:"
-	@echo "  make install        - Установка зависимостей"
-	@echo "  make run            - Запуск приложения"
-	@echo "  make test           - Запуск тестов"
-	@echo "  make reset-db       - Удаление файла базы данных"
-	@echo "  make reset          - Полный сброс проекта"
+	@echo "Available commands:"
+	@echo "  make install-prod    - Install from requirements.txt (TestPyPI)"
+	@echo "  make install-dev     - Install editable with dev deps"
+	@echo "  make install         - Install from requirements.lock"
+	@echo "  make run             - Run application locally"
+	@echo "  make test            - Run tests"
+	@echo "  make coverage        - Run tests with coverage report"
+	@echo "  make lint            - Run linter"
+	@echo "  make docker-build    - Build Docker image"
+	@echo "  make docker-up       - Start Docker Compose"
+	@echo "  make docker-down     - Stop Docker Compose"
+	@echo "  make reset-db        - Delete database file"
+	@echo "  make reset           - Full project reset"
+	@echo "  make clean           - Clean cache and artifacts"
+	@echo "  make help            - This help"
