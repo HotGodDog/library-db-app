@@ -119,5 +119,10 @@ class TestLibrarianRoleProtection:
         """Reader is redirected from librarian pages"""
         response = auth_client.get("/librarian/dashboard", follow_redirects=True)
         assert response.status_code == 200
-        # Should end up at reader dashboard or login
         assert "Личный кабинет" in response.data.decode("utf-8") or "Вход" in response.data.decode("utf-8")
+
+    def test_unauthenticated_cannot_access_librarian(self, client):
+        """Anonymous user redirected to login from librarian pages"""
+        response = client.get("/librarian/dashboard", follow_redirects=True)
+        assert response.status_code == 200
+        assert "Вход" in response.data.decode("utf-8")
