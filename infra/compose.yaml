@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: library-db-app:latest
+    container_name: library-db-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - db_data:/data
+    environment:
+      - LIBRARY_DB_PATH=/data/library.db
+    restart: unless-stopped
+
+volumes:
+  db_data:
+    driver: local

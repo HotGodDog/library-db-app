@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+.venv-lock/
+venv/
+
+# pytest / coverage
+.pytest_cache/
+htmlcov/
+.coverage
+
+# База данных (локальная, не нужна в образе)
+library.db
+*.db
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Сборка
+build/
+dist/
+*.egg-info/
+
+# Локальные артефакты
+*.log
