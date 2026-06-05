@@ -81,6 +81,17 @@ docker-logs:
 docker-shell:
 	docker compose -f infra/compose.yaml exec app /bin/sh
 
+# Docs
+
+docs:
+	mkdocs build
+
+docs-serve:
+	mkdocs serve
+
+docs-deploy:
+	mkdocs gh-deploy
+
 # Help
 
 help:
@@ -98,6 +109,8 @@ help:
 	@echo "  make docker-down     - Stop Compose and remove volume"
 	@echo "  make docker-logs     - View container logs"
 	@echo "  make docker-shell    - Open shell in container"
+	@echo "  make docs              - Build documentation"
+	@echo "  make docs-serve        - Serve docs locally"
 	@echo "  make reset-db        - Delete database file"
 	@echo "  make reset           - Full project reset"
 	@echo "  make clean           - Clean cache and artifacts"
