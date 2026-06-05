@@ -1,0 +1,20 @@
+site_name: АСУБ — Документация
+site_description: Автоматизированная система управления библиотекой
+site_author: HotGodDog
+
+nav:
+  - Главная: index.md
+  - Спецификация: specification.md
+  - Архитектура: architecture.md
+  - Use Cases: use_cases.md
+  - SQL Запросы: sql_queries.md
+  - Диаграммы: diagrams.md
+
+theme: readthedocs
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/HotGodDog/library-db-app
+
+plugins: []
