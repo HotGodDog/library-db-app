@@ -59,7 +59,7 @@ reset-db:
 reset: clean reset-db
 	@echo "Project reset. Run 'make run' to create new database."
 
-# --- Docker ---
+# Docker
 
 docker-build:
 	docker build -t library-db-app:latest .
