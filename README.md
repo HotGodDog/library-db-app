@@ -139,7 +139,3 @@ make coverage    # с отчётом о покрытии
 - **Тесты:** pytest, pytest-cov
 - **Документация:** MkDocs
 - **Отчёты:** fpdf2 (PDF), CSV
-
-## Лицензия
-
-MIT
